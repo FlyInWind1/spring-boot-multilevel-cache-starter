@@ -1,5 +1,12 @@
 import java.nio.charset.StandardCharsets
-
+buildscript {
+    repositories {
+        maven { url "https://maven.aliyun.com/nexus/content/groups/public" }
+        maven { url "https://maven.aliyun.com/nexus/content/repositories/gradle-plugin" }
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+}
 plugins {
     // IDE
     id 'idea'
@@ -12,7 +19,7 @@ plugins {
     id 'org.springframework.boot' version '2.5.3'
 
     // Publishing
-    id 'com.vanniktech.maven.publish' version '0.17.0'
+    id 'maven-publish'
 
     // Utility
     id 'jacoco'
@@ -28,6 +35,11 @@ description = "$POM_DESCRIPTION"
 
 repositories {
     mavenCentral()
+}
+repositories {
+    mavenLocal()
+    maven { url "https://maven.aliyun.com/repository/public" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
@@ -112,19 +124,9 @@ allprojects {
 }
 
 publishing {
-    repositories {
-        maven {
-            def releasesRepoUrl = "$buildDir/publications/releases"
-            def snapshotsRepoUrl = "$buildDir/publications/snapshots"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+    publications {
+        maven(MavenPublication) {
+            from components.java
         }
-    }
-}
-
-signing {
-    if (project.hasProperty('SIGNING_PRIVATE_KEY') && project.hasProperty('SIGNING_PASSWORD')) {
-        println 'Found signing credentials. Signing...'
-        useInMemoryPgpKeys(project.getProperty('SIGNING_PRIVATE_KEY'), project.getProperty('SIGNING_PASSWORD'))
-        println 'Used useInMemoryPgpKeys()'
     }
 }
