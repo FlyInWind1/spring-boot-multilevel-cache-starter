@@ -45,7 +45,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-cache:2.5.3'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.5.3'
-    implementation 'org.springframework.boot:spring-boot-actuator:2.5.3'
+    compileOnly 'org.springframework.boot:spring-boot-actuator:2.5.3'
 
     implementation 'io.micrometer:micrometer-core:1.7.2'
 
