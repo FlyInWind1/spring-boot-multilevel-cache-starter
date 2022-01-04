@@ -104,12 +104,15 @@ public class MultiLevelCacheAutoConfiguration {
         highLevelCacheProperties, cacheProperties, multiLevelCacheRedisTemplate, circuitBreaker);
   }
 
-  /** @return cache meter binder for local level of multi level cache */
-  @Bean
   @ConditionalOnBean(MultiLevelCacheManager.class)
   @ConditionalOnClass({MeterBinder.class, CacheMeterBinderProvider.class})
-  public CacheMeterBinderProvider<MultiLevelCache> multiLevelCacheCacheMeterBinderProvider() {
-    return (cache, tags) -> new CaffeineCacheMetrics(cache.getLocalCache(), cache.getName(), tags);
+  public static class ActuatorConfig {
+    /** @return cache meter binder for local level of multi level cache */
+    @Bean
+    public CacheMeterBinderProvider<MultiLevelCache> multiLevelCacheCacheMeterBinderProvider() {
+      return (cache, tags) ->
+          new CaffeineCacheMetrics(cache.getLocalCache(), cache.getName(), tags);
+    }
   }
 
   /**
